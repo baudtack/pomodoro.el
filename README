@@ -1,0 +1,17 @@
+pomodoro.el
+A timer for the Pomodoro Technique 
+(http://www.pomodorotechnique.com)
+
+Installation
+======================
+
+Simply place pomodoro.el in your Emacs load path
+and add (require 'pomodoro) to your .emacs
+
+Use M-x pomodoro-start to start the timer.
+This will cause a timer to appear in the mode line.
+When the timer runs down a break period will start
+M-x pomodoro-stop to stop it.
+
+Several customizations are available through
+M-x customize-group RET pomodoro RET
