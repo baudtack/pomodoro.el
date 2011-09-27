@@ -70,7 +70,7 @@
 
 (defvar pomodoro-timer nil)
 (defvar pomodoros 0)
-(defvar pomodoro-current-cycle "work")
+(defvar pomodoro-current-cycle "w")
 (defvar pomodor-mode-line-string "")
 
 (defun pomodoro-epoch (c)
@@ -95,28 +95,28 @@
 (defun pomodoro-tick ()
   (let ((time (- pomodoro-start-time (pomodoro-epoch (current-time)))))
     (if (<= time 0)
-        (if (string= pomodoro-current-cycle "work")
+        (if (string= pomodoro-current-cycle "w")
             (let ((p (if (and (not (= pomodoros 0))
                               (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
                          (cons pomodoro-long-break-time pomodoro-long-break-start-message)
                        (cons pomodoro-break-time pomodoro-break-start-message))))
               (if (yes-or-no-p (cdr p))
                   (progn
-                    (setq pomodoro-current-cycle "break")
+                    (setq pomodoro-current-cycle "b")
                     (setq pomodoros (incf pomodoros))
                     (pomodoro-set-start-time (car p)))
                 (pomodoro-set-start-time pomodoro-extra-time)))
           (if (yes-or-no-p pomodoro-work-start-message)
               (progn
-                (setq pomodoro-current-cycle "work")
+                (setq pomodoro-current-cycle "")
                 (pomodoro-set-start-time pomodoro-work-time))
             (pomodoro-set-start-time pomodoro-extra-time))))
-    (setq pomodoro-mode-line-string (concat " " pomodoro-current-cycle " " (pomodoro-seconds-to-time time)))
+    (setq pomodoro-mode-line-string (concat pomodoro-current-cycle (pomodoro-seconds-to-time time) " "))
     (force-mode-line-update)))
 
 (defun pomodoro-start ()
   (interactive)
-  (setq global-mode-string (append global-mode-string '(pomodoro-mode-line-string)))
+  (setq mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
   (pomodoro-set-start-time pomodoro-work-time)
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
