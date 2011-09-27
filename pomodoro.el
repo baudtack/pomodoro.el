@@ -68,9 +68,20 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-work-cycle "w"
+  "String to display in mode line for a work cycle"
+  :group 'pomodoro
+  :type 'string)
+
+(defcustom pomodoro-break-cycle "b"
+  "String to display in mode line for a break cycle"
+  :group 'pomodoro
+  :type 'string)
+
+
 (defvar pomodoro-timer nil)
 (defvar pomodoros 0)
-(defvar pomodoro-current-cycle "w")
+(defvar pomodoro-current-cycle pomodoro-work-cycle)
 (defvar pomodor-mode-line-string "")
 
 (defun pomodoro-epoch (c)
@@ -95,14 +106,14 @@
 (defun pomodoro-tick ()
   (let ((time (- pomodoro-start-time (pomodoro-epoch (current-time)))))
     (if (<= time 0)
-        (if (string= pomodoro-current-cycle "w")
+        (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (let ((p (if (and (not (= pomodoros 0))
                               (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
                          (cons pomodoro-long-break-time pomodoro-long-break-start-message)
                        (cons pomodoro-break-time pomodoro-break-start-message))))
               (if (yes-or-no-p (cdr p))
                   (progn
-                    (setq pomodoro-current-cycle "b")
+                    (setq pomodoro-current-cycle pomodoro-break-cycle)
                     (setq pomodoros (incf pomodoros))
                     (pomodoro-set-start-time (car p)))
                 (pomodoro-set-start-time pomodoro-extra-time)))
@@ -116,7 +127,7 @@
 
 (defun pomodoro-start ()
   (interactive)
-  (setq mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
+  (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
   (pomodoro-set-start-time pomodoro-work-time)
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
@@ -124,8 +135,8 @@
   (interactive)
   (cancel-timer pomodoro-timer)
   (setq pomodoro-mode-line-string "")
-  (setq pomodoro-current-cycle "work")
-  (delete 'pomodoro-mode-line-string global-mode-string)
+  (setq pomodoro-current-cycle pomodoro-work-cycle)
+  (setq-default mode-line-format (remove '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
   (force-mode-line-update))
 
 (provide 'pomodoro)
