@@ -1,0 +1,2 @@
+* TODO org mode integration
+** TODO mark a task as current and tick off pomodoros and void
