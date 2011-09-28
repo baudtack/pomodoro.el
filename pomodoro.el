@@ -127,7 +127,6 @@
 
 (defun pomodoro-start ()
   (interactive)
-  (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
   (pomodoro-set-start-time pomodoro-work-time)
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
@@ -136,7 +135,8 @@
   (cancel-timer pomodoro-timer)
   (setq pomodoro-mode-line-string "")
   (setq pomodoro-current-cycle pomodoro-work-cycle)
-  (setq-default mode-line-format (remove '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
   (force-mode-line-update))
+
+(setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
 (provide 'pomodoro)
