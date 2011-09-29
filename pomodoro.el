@@ -119,7 +119,7 @@
                 (pomodoro-set-start-time pomodoro-extra-time)))
           (if (yes-or-no-p pomodoro-work-start-message)
               (progn
-                (setq pomodoro-current-cycle "")
+								(setq pomodoro-current-cycle pomodoro-work-cycle)
                 (pomodoro-set-start-time pomodoro-work-time))
             (pomodoro-set-start-time pomodoro-extra-time))))
     (setq pomodoro-mode-line-string (concat pomodoro-current-cycle (pomodoro-seconds-to-time time) " "))
