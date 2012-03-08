@@ -1,8 +1,6 @@
 ;;; pomodoro.el --- A timer for the Pomodoro Technique 
 ;;;   (http://www.pomodorotechnique.com)
 
-;; Copyright (C) 2010 Dave Kerschner (docgnome)
-
 ;; Author: Dave Kerschner <docgnome@docgno.me>
 ;; Created: Aug 25, 2010
 
@@ -125,9 +123,14 @@
     (setq pomodoro-mode-line-string (concat pomodoro-current-cycle (pomodoro-seconds-to-time time) " "))
     (force-mode-line-update)))
 
-(defun pomodoro-start ()
-  (interactive)
-  (pomodoro-set-start-time pomodoro-work-time)
+(defun pomodoro-start (arg)
+  (interactive "p")
+	(message "%S" arg)
+	(if (eq arg nil)
+			(pomodoro-set-start-time pomodoro-work-time)
+		(progn
+			(setq pomodoro-work-time arg)
+			(pomodoro-set-start-time pomodoro-work-time)))
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
 (defun pomodoro-stop ()
