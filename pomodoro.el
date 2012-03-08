@@ -124,14 +124,14 @@
     (force-mode-line-update)))
 
 (defun pomodoro-start (arg)
-  (interactive "p")
-	(message "%S" arg)
-	(if (eq arg nil)
-			(pomodoro-set-start-time pomodoro-work-time)
-		(progn
-			(setq pomodoro-work-time arg)
-			(pomodoro-set-start-time pomodoro-work-time)))
-  (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
+  (interactive "P")
+  (let* ((timer (or (if (listp arg)
+			(car arg))
+		    arg
+		    pomodoro-work-time)))
+    (setq pomodoro-work-time timer)
+    (pomodoro-set-start-time pomodoro-work-time)
+    (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))))
 
 (defun pomodoro-stop ()
   (interactive)
