@@ -3,6 +3,7 @@
 
 ;; Author: Dave Kerschner <docgnome@docgno.me>
 ;; Created: Aug 25, 2010
+;; Version: 0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -143,3 +144,4 @@
 (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
 (provide 'pomodoro)
+;;; pomodoro.el ends here
