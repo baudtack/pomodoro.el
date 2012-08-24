@@ -1,4 +1,4 @@
-;;; pomodoro.el --- A timer for the Pomodoro Technique 
+;;; pomodoro.el --- A timer for the Pomodoro Technique
 ;;;   (http://www.pomodorotechnique.com)
 
 ;; Author: Dave Kerschner <docgnome@docgno.me>
@@ -109,6 +109,7 @@
             (let ((p (if (and (not (= pomodoros 0))
                               (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
                          (cons pomodoro-long-break-time pomodoro-long-break-start-message)
+                       (play-pomodoro-break-sound)
                        (cons pomodoro-break-time pomodoro-break-start-message))))
               (if (yes-or-no-p (cdr p))
                   (progn
@@ -140,6 +141,11 @@
   (setq pomodoro-mode-line-string "")
   (setq pomodoro-current-cycle pomodoro-work-cycle)
   (force-mode-line-update))
+
+(defun play-pomodoro-break-sound ()
+  "Play sound for break"
+  (interactive)
+  (call-process "/usr/local/bin/mplayer" nil 0 nil "/Users/adolfobuiles/.emacs.d/sounds/pomodoro_rest_time.wav"))
 
 (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
