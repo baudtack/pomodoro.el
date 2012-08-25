@@ -57,6 +57,16 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-break-start-sound "~/.emacs.d/sounds/pomodoro_break_start_sound.wav"
+  "Sound played when a break period starts"
+  :group 'pomodoro
+  :type 'string)
+
+(defcustom pomodoro-sound-player "/usr/local/bin/mplayer"
+  "Sound played when a break period starts"
+  :group 'pomodoro
+  :type 'string)
+
 (defcustom pomodoro-work-start-message "Back to work slave!"
   "Message to show when a work period starts"
   :group 'pomodoro
@@ -145,7 +155,7 @@
 (defun play-pomodoro-break-sound ()
   "Play sound for break"
   (interactive)
-  (call-process "/usr/local/bin/mplayer" nil 0 nil "/Users/adolfobuiles/.emacs.d/sounds/pomodoro_rest_time.wav"))
+  (call-process pomodoro-sound-player nil 0 nil (expand-file-name pomodoro-break-start-sound)))
 
 (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
