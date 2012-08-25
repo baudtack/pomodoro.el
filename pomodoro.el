@@ -57,13 +57,13 @@
   :group 'pomodoro
   :type 'string)
 
-(defcustom pomodoro-break-start-sound "~/.emacs.d/sounds/pomodoro_break_start_sound.wav"
+(defcustom pomodoro-break-start-sound ""
   "Sound played when a break period starts"
   :group 'pomodoro
   :type 'string)
 
 (defcustom pomodoro-sound-player "/usr/local/bin/mplayer"
-  "Sound played when a break period starts"
+  "Music player used to play sounds"
   :group 'pomodoro
   :type 'string)
 
