@@ -1,4 +1,4 @@
-;;; pomodoro.el --- A timer for the Pomodoro Technique 
+;;; pomodoro.el --- A timer for the Pomodoro Technique
 ;;;   (http://www.pomodorotechnique.com)
 
 ;; Author: Dave Kerschner <docgnome@docgno.me>
@@ -57,6 +57,16 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-break-start-sound ""
+  "Sound played when a break period starts"
+  :group 'pomodoro
+  :type 'string)
+
+(defcustom pomodoro-sound-player "/usr/local/bin/mplayer"
+  "Music player used to play sounds"
+  :group 'pomodoro
+  :type 'string)
+
 (defcustom pomodoro-work-start-message "Back to work slave!"
   "Message to show when a work period starts"
   :group 'pomodoro
@@ -109,6 +119,7 @@
             (let ((p (if (and (not (= pomodoros 0))
                               (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
                          (cons pomodoro-long-break-time pomodoro-long-break-start-message)
+                       (play-pomodoro-break-sound)
                        (cons pomodoro-break-time pomodoro-break-start-message))))
               (if (yes-or-no-p (cdr p))
                   (progn
@@ -140,6 +151,11 @@
   (setq pomodoro-mode-line-string "")
   (setq pomodoro-current-cycle pomodoro-work-cycle)
   (force-mode-line-update))
+
+(defun play-pomodoro-break-sound ()
+  "Play sound for break"
+  (interactive)
+  (call-process pomodoro-sound-player nil 0 nil (expand-file-name pomodoro-break-start-sound)))
 
 (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
