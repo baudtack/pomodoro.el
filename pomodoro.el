@@ -141,6 +141,8 @@
 			(car arg))
 		    arg
 		    pomodoro-work-time)))
+    (when pomodoro-timer
+      (cancel-timer pomodoro-timer))
     (setq pomodoro-work-time timer)
     (pomodoro-set-start-time pomodoro-work-time)
     (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))))
