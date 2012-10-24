@@ -90,7 +90,7 @@
 
 (defvar pomodoro-timer nil)
 (defvar pomodoros 0)
-(defvar pomodoro-current-cycle pomodoro-work-cycle)
+(defvar pomodoro-current-cycle nil)
 (defvar pomodor-mode-line-string "")
 
 (defun pomodoro-epoch (c)
@@ -141,6 +141,7 @@
 			(car arg))
 		    arg
 		    pomodoro-work-time)))
+    (setq pomodoro-current-cycle pomodoro-work-cycle)
     (when pomodoro-timer
       (cancel-timer pomodoro-timer))
     (setq pomodoro-work-time timer)
