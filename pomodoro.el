@@ -67,7 +67,7 @@
   :group 'pomodoro
   :type 'string)
 
-(defcustom pomodoro-work-start-message "Back to work slave!"
+(defcustom pomodoro-work-start-message "Back to work, slave!"
   "Message to show when a work period starts"
   :group 'pomodoro
   :type 'string)
@@ -159,7 +159,10 @@
   (interactive)
   (call-process pomodoro-sound-player nil 0 nil (expand-file-name pomodoro-break-start-sound)))
 
-(setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
+(defun pomodoro-add-to-mode-line ()
+ (setq-default mode-line-format 
+               (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) 
+	             mode-line-format)))
 
 (provide 'pomodoro)
 ;;; pomodoro.el ends here
