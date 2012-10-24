@@ -72,6 +72,11 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-work-start-sound ""
+  "Sound played when a work period starts"
+  :group 'pomodoro
+  :type 'string)
+
 (defcustom pomodoro-long-break-start-message "Time for a longer break!"
   "Message to show when a long break starts"
   :group 'pomodoro
@@ -127,11 +132,13 @@
                     (setq pomodoros (incf pomodoros))
                     (pomodoro-set-start-time (car p)))
                 (pomodoro-set-start-time pomodoro-extra-time)))
-          (if (yes-or-no-p pomodoro-work-start-message)
-              (progn
-								(setq pomodoro-current-cycle pomodoro-work-cycle)
-                (pomodoro-set-start-time pomodoro-work-time))
-            (pomodoro-set-start-time pomodoro-extra-time))))
+          (progn
+            (play-pomodoro-work-sound)
+            (if (yes-or-no-p pomodoro-work-start-message)
+                (progn
+                  (setq pomodoro-current-cycle pomodoro-work-cycle)
+                  (pomodoro-set-start-time pomodoro-work-time))
+              (pomodoro-set-start-time pomodoro-extra-time)))))
     (setq pomodoro-mode-line-string (concat pomodoro-current-cycle (pomodoro-seconds-to-time time) " "))
     (force-mode-line-update)))
 
@@ -155,10 +162,19 @@
   (setq pomodoro-current-cycle pomodoro-work-cycle)
   (force-mode-line-update))
 
+(defun play-pomodoro-sound (sound)
+  "Play sound for pomodoro"
+  (call-process pomodoro-sound-player nil 0 nil (expand-file-name sound)))
+
 (defun play-pomodoro-break-sound ()
   "Play sound for break"
   (interactive)
-  (call-process pomodoro-sound-player nil 0 nil (expand-file-name pomodoro-break-start-sound)))
+  (play-pomodoro-sound pomodoro-break-start-sound))
+
+(defun play-pomodoro-work-sound ()
+  "Play sound for work"
+  (interactive)
+  (play-pomodoro-sound pomodoro-work-start-sound))
 
 (setq-default mode-line-format (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) mode-line-format))
 
