@@ -6,7 +6,12 @@ Installation
 ======================
 
 Simply place pomodoro.el in your Emacs load path
-and add (require 'pomodoro) to your .emacs
+and add
+
+    (require 'pomodoro) 
+    (pomodoro-add-to-mode-line)
+
+to your .emacs
 
 Use M-x pomodoro-start to start the timer.
 This will cause a timer to appear in the mode line.
