@@ -124,8 +124,8 @@
             (let ((p (if (and (not (= pomodoros 0))
                               (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
                          (cons pomodoro-long-break-time pomodoro-long-break-start-message)
-                       (play-pomodoro-break-sound)
                        (cons pomodoro-break-time pomodoro-break-start-message))))
+              (play-pomodoro-break-sound)
               (if (yes-or-no-p (cdr p))
                   (progn
                     (setq pomodoro-current-cycle pomodoro-break-cycle)
