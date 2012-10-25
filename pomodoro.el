@@ -121,17 +121,19 @@
   (let ((time (- pomodoro-start-time (pomodoro-epoch (current-time)))))
     (if (<= time 0)
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
-            (let ((p (if (and (not (= pomodoros 0))
-                              (= (mod pomodoros pomodoro-nth-for-longer-break) 0))
-                         (cons pomodoro-long-break-time pomodoro-long-break-start-message)
-                       (cons pomodoro-break-time pomodoro-break-start-message))))
-              (play-pomodoro-break-sound)
-              (if (yes-or-no-p (cdr p))
-                  (progn
-                    (setq pomodoro-current-cycle pomodoro-break-cycle)
-                    (setq pomodoros (incf pomodoros))
-                    (pomodoro-set-start-time (car p)))
-                (pomodoro-set-start-time pomodoro-extra-time)))
+            (progn
+              (setq pomodoros (incf pomodoros))
+              (let ((p (if (= (mod pomodoros pomodoro-nth-for-longer-break) 0)
+                           (cons pomodoro-long-break-time
+                                 pomodoro-long-break-start-message)
+                         (cons pomodoro-break-time
+                               pomodoro-break-start-message))))
+                (play-pomodoro-break-sound)
+                (if (yes-or-no-p (cdr p))
+                    (progn
+                      (setq pomodoro-current-cycle pomodoro-break-cycle)
+                      (pomodoro-set-start-time (car p)))
+                  (pomodoro-set-start-time pomodoro-extra-time))))
           (progn
             (play-pomodoro-work-sound)
             (if (yes-or-no-p pomodoro-work-start-message)
@@ -145,9 +147,9 @@
 (defun pomodoro-start (arg)
   (interactive "P")
   (let* ((timer (or (if (listp arg)
-			(car arg))
-		    arg
-		    pomodoro-work-time)))
+                        (car arg))
+                    arg
+                    pomodoro-work-time)))
     (setq pomodoro-current-cycle pomodoro-work-cycle)
     (when pomodoro-timer
       (cancel-timer pomodoro-timer))
@@ -177,9 +179,9 @@
   (play-pomodoro-sound pomodoro-work-start-sound))
 
 (defun pomodoro-add-to-mode-line ()
- (setq-default mode-line-format 
-               (cons '(pomodoro-mode-line-string pomodoro-mode-line-string) 
-	             mode-line-format)))
+  (setq-default mode-line-format
+                (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
+                      mode-line-format)))
 
 (provide 'pomodoro)
 ;;; pomodoro.el ends here
