@@ -94,9 +94,10 @@
 
 
 (defvar pomodoro-timer nil)
-(defvar pomodoros 0)
+(with-no-warnings (defvar pomodoros 0))
 (defvar pomodoro-current-cycle nil)
-(defvar pomodor-mode-line-string "")
+(defvar pomodoro-mode-line-string "")
+(defvar pomodoro-start-time)
 
 (defun pomodoro-epoch (c)
   (+ (* (car c) (expt 2 16)) (cadr c)))
