@@ -99,8 +99,9 @@
 (defvar pomodoro-mode-line-string "")
 (defvar pomodoro-start-time)
 
-(defun pomodoro-set-start-time (m)
-  (setq pomodoro-start-time (+ (round (float-time)) (* m 60))))
+(defun pomodoro-set-start-time (minutes)
+  "Set how long the pomodoro timer should run"
+  (setq pomodoro-start-time (+ (round (float-time)) (* minutes 60))))
 
 (defun pomodoro-tick ()
   (let ((time (- pomodoro-start-time (round (float-time)))))
