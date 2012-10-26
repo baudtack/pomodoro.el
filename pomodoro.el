@@ -115,18 +115,15 @@
                          (cons pomodoro-break-time
                                pomodoro-break-start-message))))
                 (play-pomodoro-break-sound)
-                (if (yes-or-no-p (cdr p))
-                    (progn
-                      (setq pomodoro-current-cycle pomodoro-break-cycle)
-                      (pomodoro-set-end-time (car p)))
-                  (pomodoro-set-end-time pomodoro-extra-time))))
-          (progn
-            (play-pomodoro-work-sound)
-            (if (yes-or-no-p pomodoro-work-start-message)
-                (progn
-                  (setq pomodoro-current-cycle pomodoro-work-cycle)
-                  (pomodoro-set-end-time pomodoro-work-time))
-              (pomodoro-set-end-time pomodoro-extra-time)))))
+                (if (not (yes-or-no-p (cdr p)))
+                    (pomodoro-set-end-time pomodoro-extra-time)
+                  (setq pomodoro-current-cycle pomodoro-break-cycle)
+                  (pomodoro-set-end-time (car p)))))
+          (play-pomodoro-work-sound)
+          (if (not (yes-or-no-p pomodoro-work-start-message))
+              (pomodoro-set-end-time pomodoro-extra-time)
+            (setq pomodoro-current-cycle pomodoro-work-cycle)
+            (pomodoro-set-end-time pomodoro-work-time))))
     (setq pomodoro-mode-line-string
           (format "%s%s "
                   pomodoro-current-cycle
