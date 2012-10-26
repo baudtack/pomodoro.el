@@ -97,14 +97,14 @@
 (with-no-warnings (defvar pomodoros 0))
 (defvar pomodoro-current-cycle nil)
 (defvar pomodoro-mode-line-string "")
-(defvar pomodoro-start-time)
+(defvar pomodoro-end-time)
 
-(defun pomodoro-set-start-time (minutes)
+(defun pomodoro-set-end-time (minutes)
   "Set how long the pomodoro timer should run"
-  (setq pomodoro-start-time (+ (round (float-time)) (* minutes 60))))
+  (setq pomodoro-end-time (+ (round (float-time)) (* minutes 60))))
 
 (defun pomodoro-tick ()
-  (let ((time (- pomodoro-start-time (round (float-time)))))
+  (let ((time (- pomodoro-end-time (round (float-time)))))
     (if (<= time 0)
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (progn
@@ -118,15 +118,15 @@
                 (if (yes-or-no-p (cdr p))
                     (progn
                       (setq pomodoro-current-cycle pomodoro-break-cycle)
-                      (pomodoro-set-start-time (car p)))
-                  (pomodoro-set-start-time pomodoro-extra-time))))
+                      (pomodoro-set-end-time (car p)))
+                  (pomodoro-set-end-time pomodoro-extra-time))))
           (progn
             (play-pomodoro-work-sound)
             (if (yes-or-no-p pomodoro-work-start-message)
                 (progn
                   (setq pomodoro-current-cycle pomodoro-work-cycle)
-                  (pomodoro-set-start-time pomodoro-work-time))
-              (pomodoro-set-start-time pomodoro-extra-time)))))
+                  (pomodoro-set-end-time pomodoro-work-time))
+              (pomodoro-set-end-time pomodoro-extra-time)))))
     (setq pomodoro-mode-line-string
           (format "%s%s "
                   pomodoro-current-cycle
@@ -143,7 +143,7 @@
     (when pomodoro-timer
       (cancel-timer pomodoro-timer))
     (setq pomodoro-work-time timer)
-    (pomodoro-set-start-time pomodoro-work-time)
+    (pomodoro-set-end-time pomodoro-work-time)
     (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))))
 
 (defun pomodoro-stop ()
