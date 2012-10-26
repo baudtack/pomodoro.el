@@ -102,19 +102,6 @@
 (defun pomodoro-epoch (c)
   (+ (* (car c) (expt 2 16)) (cadr c)))
 
-(defun pomodoro-pad-time (a)
-  (if (< (length a) 2)
-      (concat "0" a)
-    a))
-
-(defun pomodoro-seconds-to-time (s)
-  (let ((minutes (number-to-string (/ s 60)))
-        (seconds (number-to-string (mod s 60))))
-    (concat
-     (pomodoro-pad-time minutes)
-     ":"
-     (pomodoro-pad-time seconds))))
-
 (defun pomodoro-set-start-time (s)
   (setq pomodoro-start-time (+ (pomodoro-epoch (current-time)) (* s 60))))
 
@@ -142,7 +129,10 @@
                   (setq pomodoro-current-cycle pomodoro-work-cycle)
                   (pomodoro-set-start-time pomodoro-work-time))
               (pomodoro-set-start-time pomodoro-extra-time)))))
-    (setq pomodoro-mode-line-string (concat pomodoro-current-cycle (pomodoro-seconds-to-time time) " "))
+    (setq pomodoro-mode-line-string
+          (format "%s%s "
+                  pomodoro-current-cycle
+                  (format-seconds ".2%m:.2%s" time)))
     (force-mode-line-update)))
 
 (defun pomodoro-start (arg)
