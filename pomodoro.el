@@ -99,14 +99,11 @@
 (defvar pomodoro-mode-line-string "")
 (defvar pomodoro-start-time)
 
-(defun pomodoro-epoch (c)
-  (+ (* (car c) (expt 2 16)) (cadr c)))
-
-(defun pomodoro-set-start-time (s)
-  (setq pomodoro-start-time (+ (pomodoro-epoch (current-time)) (* s 60))))
+(defun pomodoro-set-start-time (m)
+  (setq pomodoro-start-time (+ (round (float-time)) (* m 60))))
 
 (defun pomodoro-tick ()
-  (let ((time (- pomodoro-start-time (pomodoro-epoch (current-time)))))
+  (let ((time (- pomodoro-start-time (round (float-time)))))
     (if (<= time 0)
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (progn
