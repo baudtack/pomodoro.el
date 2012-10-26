@@ -109,7 +109,8 @@
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (progn
               (setq pomodoros (incf pomodoros))
-              (let ((p (if (= (mod pomodoros pomodoro-nth-for-longer-break) 0)
+              (let ((p (if (= 0 (mod pomodoros
+                                     pomodoro-nth-for-longer-break))
                            (cons pomodoro-long-break-time
                                  pomodoro-long-break-start-message)
                          (cons pomodoro-break-time
