@@ -126,9 +126,8 @@
             (setq pomodoro-current-cycle pomodoro-work-cycle)
             (pomodoro-set-end-time pomodoro-work-time))))
     (setq pomodoro-mode-line-string
-          (format "%s%s "
-                  pomodoro-current-cycle
-                  (format-seconds ".2%m:.2%s" time)))
+          (format (concat "%s" (format-seconds "%.2m:%.2s " time))
+                  pomodoro-current-cycle))
     (force-mode-line-update)))
 
 (defun pomodoro-start (arg)
