@@ -131,6 +131,7 @@
                   (format-seconds ".2%m:.2%s" time)))
     (force-mode-line-update)))
 
+;;;###autoload
 (defun pomodoro-start (arg)
   (interactive "P")
   (let* ((timer (or (if (listp arg)
