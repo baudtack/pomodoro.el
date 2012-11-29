@@ -108,7 +108,7 @@
     (if (<= time 0)
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (progn
-              (setq pomodoros (incf pomodoros))
+              (incf pomodoros)
               (let ((p (if (= 0 (mod pomodoros
                                      pomodoro-nth-for-longer-break))
                            (cons pomodoro-long-break-time
@@ -116,10 +116,12 @@
                          (cons pomodoro-break-time
                                pomodoro-break-start-message))))
                 (play-pomodoro-break-sound)
-                (if (not (yes-or-no-p (cdr p)))
-                    (pomodoro-set-end-time pomodoro-extra-time)
-                  (setq pomodoro-current-cycle pomodoro-break-cycle)
-                  (pomodoro-set-end-time (car p)))))
+                (cond ((yes-or-no-p (cdr p))
+                       (setq pomodoro-current-cycle pomodoro-break-cycle)
+                       (pomodoro-set-end-time (car p)))
+                      (t
+                       (decf pomodoros)
+                       (pomodoro-set-end-time pomodoro-extra-time)))))
           (play-pomodoro-work-sound)
           (if (not (yes-or-no-p pomodoro-work-start-message))
               (pomodoro-set-end-time pomodoro-extra-time)
