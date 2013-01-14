@@ -97,14 +97,15 @@
 (with-no-warnings (defvar pomodoros 0))
 (defvar pomodoro-current-cycle nil)
 (defvar pomodoro-mode-line-string "")
-(defvar pomodoro-end-time)
+(defvar pomodoro-end-time) ; the data type should be time instead of integer
 
 (defun pomodoro-set-end-time (minutes)
   "Set how long the pomodoro timer should run"
-  (setq pomodoro-end-time (+ (round (float-time)) (* minutes 60))))
+  ;; no slave can work 2^16 seconds without rest!
+  (setq pomodoro-end-time (time-add (current-time) (list 0 (* minutes 60) 0))))
 
 (defun pomodoro-tick ()
-  (let ((time (- pomodoro-end-time (round (float-time)))))
+  (let ((time (round (float-time (time-subtract pomodoro-end-time (current-time))))))
     (if (<= time 0)
         (if (string= pomodoro-current-cycle pomodoro-work-cycle)
             (progn
