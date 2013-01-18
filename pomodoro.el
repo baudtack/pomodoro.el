@@ -22,6 +22,9 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'cl))
+
 (defgroup pomodoro nil
   "Timer for the Pomodoro Technique in emacs"
   :prefix "pomodoro-"
