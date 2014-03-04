@@ -95,6 +95,17 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-time-format "%.2m:%.2s "
+  "Time string to display in mode line for countdowns.
+Formatted with `format-seconds'."
+  :group 'pomodoro
+  :type 'string)
+
+(defcustom pomodoro-show-number nil
+  "Whether the number of the pomodoro in the series should be shown in the modeline"
+  :group 'pomodoro
+  :type 'boolean)
+
 
 (defvar pomodoro-timer nil)
 (with-no-warnings (defvar pomodoros 0))
@@ -132,7 +143,10 @@
             (setq pomodoro-current-cycle pomodoro-work-cycle)
             (pomodoro-set-end-time pomodoro-work-time))))
     (setq pomodoro-mode-line-string
-          (format (concat "%s" (format-seconds "%.2m:%.2s " time))
+          (format (concat "%s"
+						  (when pomodoro-show-number
+							(format "%s-" (+ 1 (mod pomodoros pomodoro-nth-for-longer-break))))
+						  (format-seconds pomodoro-time-format time))
                   pomodoro-current-cycle))
     (force-mode-line-update)))
 
