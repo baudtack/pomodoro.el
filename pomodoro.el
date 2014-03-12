@@ -1,9 +1,9 @@
 ;;; pomodoro.el --- A timer for the Pomodoro Technique
 ;;;   (http://www.pomodorotechnique.com)
 
-;; Author: Dave Kerschner <docgnome@docgno.me>
+;; Author: David Kerschner <dkerschner@gmail.com>
 ;; Created: Aug 25, 2010
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -60,12 +60,17 @@
   :group 'pomodoro
   :type 'string)
 
+(defcustom pomodoro-play-sounds t
+  "Should pomodoro play sounds when starting a new time period"
+  :group 'pomodoro
+  :type 'boolean)
+
 (defcustom pomodoro-break-start-sound ""
   "Sound played when a break period starts"
   :group 'pomodoro
   :type 'string)
 
-(defcustom pomodoro-sound-player "/usr/local/bin/mplayer"
+(defcustom pomodoro-sound-player "mplayer"
   "Music player used to play sounds"
   :group 'pomodoro
   :type 'string)
@@ -130,14 +135,16 @@ Formatted with `format-seconds'."
                                  pomodoro-long-break-start-message)
                          (cons pomodoro-break-time
                                pomodoro-break-start-message))))
-                (play-pomodoro-break-sound)
+                (if pomodoro-play-sounds
+                    (play-pomodoro-break-sound))
                 (cond ((yes-or-no-p (cdr p))
                        (setq pomodoro-current-cycle pomodoro-break-cycle)
                        (pomodoro-set-end-time (car p)))
                       (t
                        (decf pomodoros)
                        (pomodoro-set-end-time pomodoro-extra-time)))))
-          (play-pomodoro-work-sound)
+          (if pomodoro-play-sounds
+              (play-pomodoro-work-sound))
           (if (not (yes-or-no-p pomodoro-work-start-message))
               (pomodoro-set-end-time pomodoro-extra-time)
             (setq pomodoro-current-cycle pomodoro-work-cycle)
