@@ -117,6 +117,7 @@ Formatted with `format-seconds'."
 (defvar pomodoro-current-cycle nil)
 (defvar pomodoro-mode-line-string "")
 (defvar pomodoro-end-time) ; the data type should be time instead of integer
+(defvar pomodoro-time-remaining) ;used to pause pomodoro timers
 
 (defun pomodoro-set-end-time (minutes)
   "Set how long the pomodoro timer should run"
@@ -170,6 +171,17 @@ Formatted with `format-seconds'."
     (setq pomodoro-work-time timer)
     (pomodoro-set-end-time pomodoro-work-time)
     (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))))
+
+(defun pomodoro-pause ()
+  (interactive)
+  (cancel-timer pomodoro-timer)
+  (setq pomodoro-time-remaining (round (float-time (time-subtract pomodoro-end-time (current-time)))))
+  (force-mode-line-update))
+
+(defun pomodoro-resume ()
+  (interactive)
+  (setq pomodoro-end-time (time-add (current-time) (seconds-to-time pomodoro-time-remaining)))
+  (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))) 
 
 (defun pomodoro-stop ()
   (interactive)
