@@ -75,7 +75,7 @@
   :group 'pomodoro
   :type 'string)
 
-(defcustom pomodoro-work-start-message "Back to work, slave!"
+(defcustom pomodoro-work-start-message "Back to work!"
   "Message to show when a work period starts"
   :group 'pomodoro
   :type 'string)
@@ -121,7 +121,6 @@ Formatted with `format-seconds'."
 
 (defun pomodoro-set-end-time (minutes)
   "Set how long the pomodoro timer should run"
-  ;; no slave can work 2^16 seconds without rest!
   (setq pomodoro-end-time (time-add (current-time) (list 0 (* minutes 60) 0))))
 
 (defun pomodoro-tick ()
