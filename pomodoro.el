@@ -21,6 +21,7 @@
 ;; Boston, MA 02111-1307, USA.
 
 ;;; Code:
+(require 'notifications)
 
 (eval-when-compile
   (require 'cl))
@@ -111,6 +112,10 @@ Formatted with `format-seconds'."
   :group 'pomodoro
   :type 'boolean)
 
+(defcustom pomodoro-desktop-notification nil
+  "Whether show desktop notifications"
+  :group 'pomodoro
+  :type 'boolean)
 
 (defvar pomodoro-timer nil)
 (with-no-warnings (defvar pomodoros 0))
@@ -137,6 +142,8 @@ Formatted with `format-seconds'."
                                pomodoro-break-start-message))))
                 (if pomodoro-play-sounds
                     (play-pomodoro-break-sound))
+		(if pomodoro-desktop-notification
+		    (notifications-notify :body (cdr p)))
                 (cond ((yes-or-no-p (cdr p))
                        (setq pomodoro-current-cycle pomodoro-break-cycle)
                        (pomodoro-set-end-time (car p)))
@@ -145,6 +152,8 @@ Formatted with `format-seconds'."
                        (pomodoro-set-end-time pomodoro-extra-time)))))
           (if pomodoro-play-sounds
               (play-pomodoro-work-sound))
+	  (if pomodoro-desktop-notification
+	      (notifications-notify :body pomodoro-work-start-message))
           (if (not (yes-or-no-p pomodoro-work-start-message))
               (pomodoro-set-end-time pomodoro-extra-time)
             (setq pomodoro-current-cycle pomodoro-work-cycle)
