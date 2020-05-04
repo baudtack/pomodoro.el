@@ -117,6 +117,11 @@ Formatted with `format-seconds'."
   :group 'pomodoro
   :type 'boolean)
 
+(defcustom pomodoro-inhibit-prompting-messages t
+  "Whether inhibit prompting messages"
+  :group 'pomodoro
+  :type 'boolean)
+
 (defvar pomodoro-timer nil)
 (with-no-warnings (defvar pomodoros 0))
 (defvar pomodoro-current-cycle nil)
@@ -178,25 +183,33 @@ Formatted with `format-seconds'."
       (cancel-timer pomodoro-timer))
     (setq pomodoro-work-time timer)
     (pomodoro-set-end-time pomodoro-work-time)
-    (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))))
+    (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
+  (if (not pomodoro-inhibit-prompting-messages)
+      (message "Pomodoro started")))
 
 (defun pomodoro-pause ()
   (interactive)
   (cancel-timer pomodoro-timer)
   (setq pomodoro-time-remaining (round (float-time (time-subtract pomodoro-end-time (current-time)))))
-  (force-mode-line-update))
+  (force-mode-line-update)
+  (if (not pomodoro-inhibit-prompting-messages)
+      (message "Pomodoro paused")))
 
 (defun pomodoro-resume ()
   (interactive)
   (setq pomodoro-end-time (time-add (current-time) (seconds-to-time pomodoro-time-remaining)))
-  (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))) 
+  (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))
+  (if (not pomodoro-inhibit-prompting-messages)
+      (message "Pomodoro resumed"))) 
 
 (defun pomodoro-stop ()
   (interactive)
   (cancel-timer pomodoro-timer)
   (setq pomodoro-mode-line-string "")
   (setq pomodoro-current-cycle pomodoro-work-cycle)
-  (force-mode-line-update))
+  (force-mode-line-update)
+  (if (not pomodoro-inhibit-prompting-messages)
+      (message "Pomodoro stoped")))
 
 (defun play-pomodoro-sound (sound)
   "Play sound for pomodoro"
