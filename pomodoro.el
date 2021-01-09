@@ -122,6 +122,16 @@ Formatted with `format-seconds'."
   :group 'pomodoro
   :type 'boolean)
 
+(defcustom pomodoro-start-work-hook nil
+  "Hook run when a pomodoro starts."
+  :group 'pomodoro
+  :type 'hook)
+
+(defcustom pomodoro-start-break-hook nil
+  "Hook run when a break between pomodoros starts."
+  :group 'pomodoro
+  :type 'hook)
+
 (defvar pomodoro-timer nil)
 (with-no-warnings (defvar pomodoros 0))
 (defvar pomodoro-current-cycle nil)
@@ -151,7 +161,8 @@ Formatted with `format-seconds'."
 		    (notifications-notify :body (cdr p)))
                 (cond ((yes-or-no-p (cdr p))
                        (setq pomodoro-current-cycle pomodoro-break-cycle)
-                       (pomodoro-set-end-time (car p)))
+                       (pomodoro-set-end-time (car p))
+                       (run-hooks 'pomodoro-start-break-hook))
                       (t
                        (decf pomodoros)
                        (pomodoro-set-end-time pomodoro-extra-time)))))
@@ -162,7 +173,8 @@ Formatted with `format-seconds'."
           (if (not (yes-or-no-p pomodoro-work-start-message))
               (pomodoro-set-end-time pomodoro-extra-time)
             (setq pomodoro-current-cycle pomodoro-work-cycle)
-            (pomodoro-set-end-time pomodoro-work-time))))
+            (pomodoro-set-end-time pomodoro-work-time)
+            (run-hooks 'pomodoro-start-work-hook))))
     (setq pomodoro-mode-line-string
           (format (concat "%s"
 						  (when pomodoro-show-number
@@ -183,7 +195,8 @@ Formatted with `format-seconds'."
       (cancel-timer pomodoro-timer))
     (setq pomodoro-work-time timer)
     (pomodoro-set-end-time pomodoro-work-time)
-    (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
+    (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))
+    (run-hooks 'pomodoro-start-work-hook))
   (if (not pomodoro-inhibit-prompting-messages)
       (message "Pomodoro started")))
 
@@ -200,7 +213,7 @@ Formatted with `format-seconds'."
   (setq pomodoro-end-time (time-add (current-time) (seconds-to-time pomodoro-time-remaining)))
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick))
   (if (not pomodoro-inhibit-prompting-messages)
-      (message "Pomodoro resumed"))) 
+      (message "Pomodoro resumed")))
 
 (defun pomodoro-stop ()
   (interactive)
